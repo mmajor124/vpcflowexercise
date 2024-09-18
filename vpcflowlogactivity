@@ -1,0 +1,58 @@
+VPC Flow Log Activity
+
+Objective
+Students will create a VPC and set up VPC Flow Logs to monitor network traffic. They will then use the AWS CLI to retrieve and analyze these logs using either `awk` or `grep`.
+
+Activity Breakdown
+
+Part 1: Setting up the VPC
+
+1. Create a VPC:
+   Name the VPC `FlowLogPractice` with a single public subnet.
+
+2. Create a VPC Flow Log:
+   - Go to the VPC dashboard and select the newly created VPC.
+   - Navigate to the "Flow Logs" tab, then click "Create Flow Log."
+   - Set the following configurations:
+     - Filter: `All`
+     - Destination: `CloudWatch Logs`
+     - Log Group: Create a new log group named `FlowLogPractice-Logs`.
+
+3. Launch an EC2 Instance:
+   - In the public subnet of the VPC, launch a basic Amazon Linux 2 or Ubuntu EC2 instance. This will generate some network traffic.
+   - Ensure the security group allows ICMP (ping) and SSH traffic.
+
+Part 2: Generating Traffic and Retrieving Flow Logs
+
+1. Generate Traffic:
+   - Connect to the EC2 instance.
+   - Generate network traffic by pinging a public IP (e.g., `ping 8.8.8.8 -c 4`).
+
+2. Retrieve Flow Logs:
+   - Use the AWS CLI to retrieve the latest log events from the CloudWatch log group:
+     ```bash
+     aws logs get-log-events --log-group-name FlowLogPractice-Logs --log-stream-name <LogStreamName> --limit 100
+     ```
+   - Note: Replace `<LogStreamName>` with the appropriate log stream name from CloudWatch Logs.
+
+Part 3: Analyzing Flow Logs using `awk` or `grep`
+
+1. Download Flow Logs:
+   - Save the output of the logs to a file on the local machine:
+     ```bash
+     aws logs get-log-events --log-group-name FlowLogPractice-Logs --log-stream-name <LogStreamName> --limit 100 > flow_logs.txt
+     ```
+
+2. Analyze Flow Logs:
+   - Use `grep` to filter logs for successful network connections:
+     
+   - Alternatively, use `awk` to extract specific fields (e.g., source IP, destination IP, and status):
+    
+     This command will print the source IP, destination IP, and the status of the traffic.
+
+Discussion Points
+- What kind of network traffic is visible in the logs?
+- How can you use these logs to monitor and troubleshoot VPC network activity?
+
+Deliverables
+- Students should provide the results of their `grep` or `awk` commands showing specific network traffic patterns.
